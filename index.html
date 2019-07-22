@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hospital Maps</title>
+        <meta name="viewport" content="initial-scale=1.0">
+        <meta charset="utf-8">
+        <style>
+            #map {
+                height: 100%;
+            }
+            html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            #location-input {
+                margin-top: 10px;
+                height: 20px;
+                width: 300px;
+                border-radius: 10px;
+                padding: 10px;
+                font-size: 20px;
+            }
+            #sidebar {
+                width: 300px;
+                border-left-style: solid;
+                height: 100vh;
+                padding: 10px;
+                background-color: white;
+            }
+            #sidebar h1 {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <input id="location-input" type="text" placeholder="Search For Hospitals Around...">
+        <div id="map"></div>
+        <div id="sidebar">
+            <h1>Hospitals</h1>
+        </div>
+        
+        <script src="script.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE&libraries=places&callback=initMap"
+        async defer></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </body>
+</html>

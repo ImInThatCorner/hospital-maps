@@ -16,6 +16,7 @@ function initMap() {
     var searchBox = new google.maps.places.SearchBox(input);
 
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(document.getElementById("search-here-button"));
     map.controls[google.maps.ControlPosition.TOP_RIGHT].push(document.getElementById("sidebar"));
     
     map.addListener('bounds_changed', function() {
@@ -23,43 +24,68 @@ function initMap() {
     });
     
     searchBox.addListener('places_changed', function() {
+        for(var i = 0; i < hospitals.length; i++) {
+            hospitals[i].marker.setMap(null);
+        }
         var places = searchBox.getPlaces();
 
         if (places.length == 0) {
             return;
         }
-
-        hospitals.forEach(function(hospital) {
-            hospital.marker.setMap(null);
-        });
         
         document.getElementById("sidebar").innerHTML = "<h1>Hospitals</h1>";
-
-        var bounds = new google.maps.LatLngBounds();
+        hospitals = [];
+        
         places.forEach(function(place) {
             if (!place.geometry) {
                 console.log("Returned place contains no geometry");
                 return;
             }
-            
-            var request = {
-                location: place.geometry.location,
-                radius: '1000000',
-                type: ['hospital'],
-                fields: ['opening_hours']
-            };
-            
-            service.search(request, callback);
-
-            if (place.geometry.viewport) {
-                bounds.union(place.geometry.viewport);
-            } else {
-                bounds.extend(place.geometry.location);
-            }
+            searchLocation(place);
         });
-        map.fitBounds(bounds);
-        
     });
+}
+
+function searchCurrentLocation() {
+    for(var i = 0; i < hospitals.length; i++) {
+        hospitals[i].marker.setMap(null);
+    }
+
+    document.getElementById("sidebar").innerHTML = "<h1>Hospitals</h1>";
+    hospitals = [];
+
+    if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var place = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            var request = {
+                location: place,
+                radius: '5000',
+                type: ['hospital']
+            };
+            service.search(request, callback);
+            map.setCenter(place);
+        });
+    }
+}
+
+function searchLocation(place) {
+    var bounds = new google.maps.LatLngBounds();
+
+    var request = {
+        location: place.geometry.location,
+        radius: '5000',
+        type: ['hospital'],
+    };
+            
+    service.search(request, callback);
+
+    if (place.geometry.viewport) {
+        bounds.union(place.geometry.viewport);
+    } else {
+        bounds.extend(place.geometry.location);
+    }
+
+    map.fitBounds(bounds);
 }
 
 function callback(data) {

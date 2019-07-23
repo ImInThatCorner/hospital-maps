@@ -31,10 +31,19 @@
             #sidebar h1 {
                 text-align: center;
             }
+            #search-here-button {
+            	padding: 10px;
+            	margin-top: 10px;
+            	margin-left: 10px;
+            	font-size: 20px;
+            	border-radius: 10px;
+
+            }
         </style>
     </head>
     <body>
         <input id="location-input" type="text" placeholder="Search For Hospitals Around...">
+        <button id="search-here-button" onclick="searchCurrentLocation()">Search Current Location</button>
         <div id="map"></div>
         <div id="sidebar">
             <h1>Hospitals</h1>
